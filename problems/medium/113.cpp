@@ -25,3 +25,39 @@ public:
     }
 };
 
+// iterative
+class Solution_1 {
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        if (!root) return {};
+        vector<vector<int>> answer;
+        stack<pair<TreeNode*, int>> st;
+        st.push(make_pair(root, targetSum));
+        stack<vector<int>> paths;
+        paths.push({root->val});
+        while (!st.empty()) {
+            TreeNode* curNode = st.top().first;
+            int curTarget = st.top().second;
+            vector<int> curPath = paths.top();
+            st.pop();
+            paths.pop();
+            if (curNode->val == curTarget && !curNode->left && !curNode->right)
+            answer.push_back(curPath);
+            if (curNode->left) {
+            curPath.push_back(curNode->left->val);
+            paths.push(curPath);
+            curPath.pop_back();
+            st.push(make_pair(curNode->left, curTarget - curNode->val));
+            }
+            if (curNode->right) {
+            curPath.push_back(curNode->right->val);
+            paths.push(curPath);
+            curPath.pop_back();
+            st.push(make_pair(curNode->right, curTarget - curNode->val));
+            }
+        }
+        return answer;
+    }
+
+};
+

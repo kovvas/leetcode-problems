@@ -27,3 +27,25 @@ public:
     }
 };
 
+// iterative
+class Solution_3 {
+public:
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (!root) return false;
+        stack<pair<TreeNode*, int>> st;
+        st.push(make_pair(root, targetSum));
+        while (!st.empty()) {
+            TreeNode* curNode = st.top().first;
+            int curTarget = st.top().second;
+            st.pop();
+            if (curNode->val == curTarget && !curNode->left && !curNode->right)
+                return true;
+            if (curNode->left)
+                st.push(make_pair(curNode->left, curTarget - curNode->val));
+            if (curNode->right)
+                st.push(make_pair(curNode->right, curTarget - curNode->val));
+        }
+        return false;
+    }
+};
+
