@@ -18,3 +18,25 @@ bool isSubsequence(string s, string t) {
     return false;
 }
 
+bool isSubsequence(string s, string t) {
+    unordered_map<char, vector<int>> data;
+    for (int i = 0; i < t.size(); ++i) {
+        data[t[i]].push_back(i);
+    }
+    int curMatchedIndex = -1;
+    for (const auto& x : s) {
+        if (data.find(x) == data.end()) return false;
+
+        bool isMatched = false;
+        for (const auto& matchedIndex : data[x]) {
+            if (curMatchedIndex < matchedIndex) {
+                curMatchedIndex = matchedIndex;
+                isMatched = true;
+                break;
+            }
+        }
+
+        if (!isMatched) return false;
+    }
+    return true;
+}
