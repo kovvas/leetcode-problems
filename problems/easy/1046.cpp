@@ -1,10 +1,7 @@
 // greedy, priority queue
 
 int lastStoneWeight(vector<int>& stones) {
-    priority_queue<int> pile;
-    for (const auto& x : stones) {
-        pile.push(x);
-    }
+    priority_queue<int> pile(stones.begin(), stones.end());
     while (pile.size() > 1) {
         int leftRock = pile.top();
         pile.pop();
