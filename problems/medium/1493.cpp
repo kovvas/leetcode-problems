@@ -29,3 +29,27 @@ public:
     }
 };
 
+// using prev sums (kinda memoization approach)
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        size_t curSum = 0;
+        size_t prevSum = 0;
+        size_t maxSum = 0;
+        bool wasDeleted = false;
+        for (size_t i = 0; i < nums.size(); ++i) {
+            if (nums[i] == 0) {
+                wasDeleted = true;
+                maxSum = max(maxSum, curSum + prevSum);
+                prevSum = curSum;
+                curSum = 0;
+            } else {
+                curSum++;
+            }
+        }
+        maxSum = max(maxSum, curSum + prevSum);
+        if (!wasDeleted && maxSum > 0) maxSum--;
+        return maxSum;
+    }
+};
+

@@ -28,3 +28,36 @@ public:
         return chars.size();
     }
 };
+
+// a bit cleaner
+class Solution {
+public:
+    int compress(vector<char>& chars) {
+        char curChar = chars[0];
+        int curCharCnt = 1;
+        size_t ptr = 0;
+        for (size_t i = 1; i < chars.size(); ++i) {
+            if (chars[i] == curChar)
+                curCharCnt++;
+            else {
+                chars[ptr++] = curChar;
+                curChar = chars[i];
+                if (curCharCnt > 1) {
+                    string num = to_string(curCharCnt);
+                    curCharCnt = 1;
+                    for (const auto& c : num)
+                        chars[ptr++] = c;
+                }
+            }
+        }
+        chars[ptr++] = curChar;
+        if (curCharCnt > 1) {
+            string num = to_string(curCharCnt);
+            curCharCnt = 1;
+            for (const auto& c : num)
+                chars[ptr++] = c;
+        }
+        chars.resize(ptr);
+        return chars.size();
+    }
+};
