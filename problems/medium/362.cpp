@@ -70,3 +70,33 @@ public:
 private:
     queue<int> data;
 };
+
+// clean solution for many hits per second
+class HitCounter {
+public:
+    HitCounter() : hitsCounter(0) {
+    }
+    
+    void hit(int timestamp) {
+        hitsCounter++;
+        if (data.empty() || data.back().first != timestamp) {
+            data.push_back({timestamp, 1});
+            while (!data.empty() && timestamp - data.front().first >= 300) {
+                hitsCounter -= data.front().second;
+                data.pop_front();
+            }
+        }
+        else data.back().second++;
+    }
+    
+    int getHits(int timestamp) {
+        while (!data.empty() && timestamp - data.front().first >= 300) {
+            hitsCounter -= data.front().second;
+            data.pop_front();
+        }
+        return hitsCounter;
+    }
+private:
+    deque<pair<int, int>> data;
+    int hitsCounter;
+};
