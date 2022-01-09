@@ -20,6 +20,20 @@ public:
     }
 };
 
-// DP
-
+// DP O(N) O(1)
+class Solution {
+public:
+    int numWays(int n, int k) {
+        int first = k;
+        int second = k * k;
+        if (n == 1) return first;
+        if (n == 2) return second;
+        for (int i = 2; i < n; ++i) {
+            int temp = (k - 1) * (second + first);
+            first = second;
+            second = temp;
+        }
+        return second;
+    }
+};
 
