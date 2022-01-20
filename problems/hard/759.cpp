@@ -42,3 +42,40 @@ public:
     }
 };
 
+// Time complexity NlogK
+typedef pair<int, int> user_data;
+
+
+class Comparator {
+public:
+    bool operator()(const pair<Interval, user_data>& lhs, const pair<Interval, user_data>& rhs) {
+        return lhs.first.start > rhs.first.start;
+    }
+};
+
+class Solution {
+public:
+    vector<Interval> employeeFreeTime(vector<vector<Interval>> schedule) {
+        priority_queue<pair<Interval, user_data>, vector<pair<Interval, user_data>>, Comparator> data;
+        vector<Interval> answer;
+        if (schedule.empty()) return answer;
+        for (int i = 0; i < schedule.size(); ++i)
+            data.push(make_pair(schedule[i][0], make_pair(i, 0)));
+        auto prevInterval = data.top().first;
+        while (!data.empty()) {
+            auto dataTop = data.top();
+            data.pop();
+            if (dataTop.first.start > prevInterval.end) {
+                answer.push_back(Interval(prevInterval.end, dataTop.first.start));
+                prevInterval = dataTop.first;
+            } else if (prevInterval.end < dataTop.first.end) prevInterval = dataTop.first;
+            
+            vector<Interval> employeeSchedule = schedule[dataTop.second.first];
+            if (employeeSchedule.size() > dataTop.second.second + 1) {
+                dataTop.second.second++;
+                data.push(make_pair(employeeSchedule[dataTop.second.second], dataTop.second));
+            }
+        }
+        return answer;
+    }
+};
