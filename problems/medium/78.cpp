@@ -41,3 +41,21 @@ public:
     }
 };
 
+// O(N*2^N) O(1)
+class Solution {
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        if (nums.empty()) return {{}};
+        vector<vector<int>> answer = {{}};
+        for (const auto& x : nums) {
+            vector<vector<int>> new_subsets;
+            for (auto s : answer) {
+                s.push_back(x);
+                new_subsets.push_back(s);
+            }
+            answer.insert(answer.end(), new_subsets.begin(), new_subsets.end());
+        }
+        
+        return answer;
+    }
+};
