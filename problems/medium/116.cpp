@@ -6,29 +6,23 @@
 class Solution_1 {
 public:
     Node* connect(Node* root) {
-        if (!root) return nullptr;
+        if (!root) return NULL;
         queue<Node*> q;
+        root->next = NULL;
         q.push(root);
-        int to_process = 1;
-        int temp_process = 0;
         while (!q.empty()) {
-            for (int i = 0; i < to_process; ++i) {
+            int curSize = q.size();
+            for (int i = 0; i < curSize; ++i) {
                 Node* curNode = q.front();
                 q.pop();
-                if (i != to_process - 1) {
+                if (i != curSize - 1)
                     curNode->next = q.front();
-                } else curNode->next = nullptr;
+                else curNode->next = NULL;
                 if (curNode->left) {
                     q.push(curNode->left);
-                    temp_process++;
-                }
-                if (curNode->right) {
                     q.push(curNode->right);
-                    temp_process++;
                 }
             }
-            to_process = temp_process;
-            temp_process = 0;
         }
         return root;
     }
@@ -38,17 +32,20 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        if (!root) return nullptr;
-        Node* leftMost = root;
-        while (leftMost->left) {
-            Node* levelHead = leftMost;
-            while (levelHead) {
-                levelHead->left->next = levelHead->right;
-                if (levelHead->next)
-                    levelHead->right->next = levelHead->next->left;
-                levelHead = levelHead->next;
+        if (!root) return NULL;
+        auto nextLeftMost = root->left;
+        auto curLeftMost = root;
+        while (nextLeftMost) {
+            while (curLeftMost) {
+                if (!curLeftMost->left) break;
+                curLeftMost->left->next = curLeftMost->right;
+                if (!curLeftMost->next)
+                    curLeftMost->right->next = NULL;
+                else curLeftMost->right->next = curLeftMost->next->left;
+                curLeftMost = curLeftMost->next;
             }
-            leftMost = leftMost->left;
+            curLeftMost = nextLeftMost;
+            nextLeftMost = curLeftMost->left;
         }
         return root;
     }

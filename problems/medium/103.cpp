@@ -2,7 +2,7 @@
 // Name: Binary Tree Zigzag Level Order Traversal
 // Tags: BFS, DFS
 
-// ugly keeping all nodes in queue
+// O(N) O(N)
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -19,50 +19,31 @@ public:
     vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
         if (!root) return {};
         queue<TreeNode*> q;
-        queue<TreeNode*> st;
-        vector<int> levelsSize;
+        vector<vector<int>> answer;
+        int cur_process = 1;
+        int next_process = 0;
+        bool fromLeft = true;
         q.push(root);
-        st.push(root);
-        int to_process = 1;
-        int temp_to_process = 0;
         while (!q.empty()) {
-            for (int i = 0; i < to_process; ++i) {
+            vector<int> curLevel;
+            for (int i = 0; i < cur_process; ++i) {
                 TreeNode* curNode = q.front();
                 q.pop();
-                if (curNode->left) {
+                if (curNode) {
+                    curLevel.push_back(curNode->val);
                     q.push(curNode->left);
-                    st.push(curNode->left);
-                    temp_to_process++;
-                    }
-                if (curNode->right) {
                     q.push(curNode->right);
-                    st.push(curNode->right);
-                    temp_to_process++;
+                    next_process += 2;
                 }
             }
-            levelsSize.push_back(to_process);
-            to_process = temp_to_process;
-            temp_to_process = 0;
-        }
-        int numberOfLevels = levelsSize.size();
-        bool fromLeftToRight = true;
-        vector<vector<int>> answer(numberOfLevels, vector<int>{});
-        for (int j = 0; j < numberOfLevels; ++j) {
-            int curLevelSize = levelsSize[j];
-            vector<int> curLevel(curLevelSize, 0);
-            if (!fromLeftToRight) {
-                for (int i = curLevelSize - 1; i >= 0; --i) {
-                    curLevel[i] = st.front()->val;
-                    st.pop();
-                }
-            } else {
-                for (int i = 0; i < curLevelSize; ++i) {
-                    curLevel[i] = st.front()->val;
-                    st.pop();
-                }
+            cur_process = next_process;
+            next_process = 0;
+            if (curLevel.empty()) break;
+            if (!fromLeft) {
+                reverse(curLevel.begin(), curLevel.end());
             }
-            fromLeftToRight = !fromLeftToRight;
-            answer[j] = curLevel;
+            fromLeft ^= true;
+            answer.push_back(curLevel);
         }
         return answer;
     }

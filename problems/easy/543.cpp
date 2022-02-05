@@ -21,22 +21,32 @@ public:
 };
 
 // recursive version 1
-class Solution_1 {
+class Solution {
 public:
-    int helper(TreeNode* node, int& d) {
+    int helper(TreeNode* node, int& answer) {
         if (!node) return 0;
-        int lhs = helper(node->left, d);
-        int rhs = helper(node->right, d);
-        if (lhs + rhs > d) d = lhs + rhs;
-        return 1 + max(lhs, rhs);
+        int curMax = 0;
+        int left = 0;
+        if (node->left)
+            left = 1 + helper(node->left, answer);
+        int right = 0;
+        if (node->right)
+            right = 1 + helper(node->right, answer);
+        answer = max(answer, left + right);
+        return max(left, right);
     }
     
     int diameterOfBinaryTree(TreeNode* root) {
-        int diameter = 0;
-        helper(root->right, diameter);
-        return diameter;
+        if (!root) return 0;
+        int answer = 0;
+        int left = 0;
+        if (root->left)
+            left = 1 + helper(root->left, answer);
+        int right = 0;
+        if (root->right)
+            right = 1 + helper(root->right, answer);
+        answer = max(answer, left + right);
+        return answer;
     }
 };
-
-// iterative solution
 

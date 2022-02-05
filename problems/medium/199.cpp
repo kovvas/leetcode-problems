@@ -2,30 +2,22 @@
 // Name: Binary Tree Right Side View
 // Tags: Tree, BFS
 
+// O(N) O(N)
 class Solution {
 public:
     vector<int> rightSideView(TreeNode* root) {
-        vector<int> answer = {};
-        if (!root) return answer;
-        queue<TreeNode*> data;
-        data.push(root);
-        int counter = 1;
-        while(!data.empty()) {
-            answer.push_back(data.back()->val);
-            int prev_level = counter;
-            counter = 0;
-            while(prev_level != 0) {
-                TreeNode* cur = data.front();
-                data.pop();
-                prev_level--;
-                if (cur->left) {
-                    data.push(cur->left);
-                    counter++;
-                }
-                if (cur->right) {
-                    data.push(cur->right);
-                    counter++;
-                }
+        if (!root) return {};
+        vector<int> answer;
+        queue<TreeNode*> q;
+        q.push(root);
+        while (!q.empty()) {
+            int curLevel = q.size();
+            for (int i = 0; i < curLevel; ++i) {
+                TreeNode* curNode = q.front();
+                q.pop();
+                if (curNode->left) q.push(curNode->left);
+                if (curNode->right) q.push(curNode->right);
+                if (i == curLevel - 1) answer.push_back(curNode->val);
             }
         }
         return answer;

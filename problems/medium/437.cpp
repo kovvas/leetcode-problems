@@ -60,3 +60,32 @@ public:
         return answer;
     }
 };
+
+// O(N) O(N)
+class Solution {
+public:
+    void helper(TreeNode* node, int& answer, unordered_map<int, int>& cSums, int curSum, int target) {
+        if (!node) return;
+        curSum += node->val;
+        if (curSum == target) answer++;
+        if (cSums.find(curSum - target) != cSums.end())
+            answer += cSums[curSum - target];
+        cSums[curSum]++;
+        helper(node->left, answer, cSums, curSum, target);
+        helper(node->right, answer, cSums, curSum, target);
+        cSums[curSum]--;
+    }
+    
+    int pathSum(TreeNode* root, int targetSum) {
+        if (!root) return 0;
+        if (!root->left && !root->right) {
+            if (root->val == targetSum) return 1;
+            return 0;
+        }
+        unordered_map<int, int> cSums;
+        int answer = 0;
+        int curSum = 0;
+        helper(root, answer, cSums, curSum, targetSum);
+        return answer;
+    }
+};
